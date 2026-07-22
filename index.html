@@ -301,6 +301,20 @@ for (let i = 1; i <= 6; i++) {
   ghostIdleImgs.push(img);
   
 }
+//
+//鍵アニメーション
+const keyEffectImgs = [];
+
+for (let i = 1; i <= 6; i++) {
+  
+  const img = new Image();
+  
+  img.src = `key_effect_${i}.png`;
+  
+  keyEffectImgs.push(img);
+  
+}
+
 // =====================================
 // クリアアニメ
 // =====================================
@@ -434,7 +448,18 @@ let ghost = {
   hasKey: false
   
 };
-
+let keyEffect = {
+  
+  playing: false,
+  
+  x: 0,
+  y: 0,
+  
+  frame: 0,
+  
+  timer: 0
+  
+};
 let keyReturning = false;
 
 let keyDelivered = false;
@@ -1062,6 +1087,13 @@ ghost.y = ghost.waitY;
 
 ghost.float = 0;
   
+  keyEffect.playing = true;
+
+keyEffect.x = key.x;
+keyEffect.y = key.y;
+
+keyEffect.frame = 0;
+keyEffect.timer = 0;
   
   console.log("鍵取得");
   
@@ -2006,6 +2038,27 @@ if (waitingStage3Start) {
   }
   
 }
+if (keyEffect.playing) {
+  
+  keyEffect.timer += 1000 / 60;
+  
+  if (keyEffect.timer >= 200) {
+    
+    keyEffect.frame++;
+    
+    keyEffect.timer = 0;
+    
+    if (keyEffect.frame >= keyEffectImgs.length) {
+      
+      keyEffect.playing = false;
+      
+      keyEffect.frame = 0;
+      
+    }
+    
+  }
+  
+}
 }
 
 // =====================================
@@ -2405,7 +2458,17 @@ if (stage2 && key.visible && !key.taken) {
   );
   
 }
-
+if (keyEffect.playing) {
+  
+  ctx.drawImage(
+    keyEffectImgs[keyEffect.frame],
+    keyEffect.x,
+    keyEffect.y,
+    key.width,
+    key.height
+  );
+  
+}
 ctx.fillStyle = "black";
 ctx.font = "20px sans-serif";
 
